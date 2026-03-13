@@ -1,0 +1,24 @@
+{
+  "name": "@verusidx/shared",
+  "version": "0.1.0",
+  "description": "Shared library for verusidx MCP servers — registry reader, RPC client, error handling, audit logging",
+  "type": "module",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
