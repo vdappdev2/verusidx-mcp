@@ -1,6 +1,6 @@
 {
   "name": "@verusidx/chain-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "description": "Foundation MCP server — chain discovery, daemon management, health checks, raw transactions",
   "type": "module",

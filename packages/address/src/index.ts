@@ -2,14 +2,10 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { ensureSpendingLimitsFile } from '@verusidx/shared';
 import { registerTools } from './tools.js';
 
-// Create default spending-limits.json if it doesn't exist yet
-ensureSpendingLimitsFile();
-
 const server = new McpServer({
-  name: 'verusidx-marketplace-mcp',
+  name: 'verusidx-address-mcp',
   version: '0.1.2',
 });
 

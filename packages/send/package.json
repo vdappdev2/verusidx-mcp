@@ -1,6 +1,6 @@
 {
   "name": "@verusidx/send-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP server for Verus currency operations — send, convert, cross-chain transfer, check balances and conversion paths",
   "license": "MIT",
   "type": "module",

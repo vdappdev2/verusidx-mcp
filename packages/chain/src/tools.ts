@@ -152,34 +152,6 @@ export function registerTools(server: McpServer): void {
   );
 
   server.tool(
-    'getnewaddress',
-    'Generate a new transparent (R-address) for receiving payments. Use this to create fresh addresses for identity primaryaddresses, change addresses, or destination addresses. Each call generates a unique address from the wallet\'s keypool.',
-    { chain: z.string().describe('Chain to generate address on (e.g., "VRSC", "vrsctest")') },
-    async ({ chain }) => {
-      try {
-        const result = await rpcCall(chain, 'getnewaddress', []);
-        return ok(result);
-      } catch (err) {
-        return handleError(err);
-      }
-    },
-  );
-
-  server.tool(
-    'z_getnewaddress',
-    'Generate a new shielded Sapling address (zs-address) for private transactions. Use this to create addresses for identity privateaddress fields or private sends. Each call generates a unique shielded address.',
-    { chain: z.string().describe('Chain to generate address on (e.g., "VRSC", "vrsctest")') },
-    async ({ chain }) => {
-      try {
-        const result = await rpcCall(chain, 'z_getnewaddress', ['sapling']);
-        return ok(result);
-      } catch (err) {
-        return handleError(err);
-      }
-    },
-  );
-
-  server.tool(
     'status',
     'Check registry freshness and daemon reachability. Use this to verify chain health before starting a workflow, or to debug why calls to other MCPs are failing. Without a chain parameter, returns an overview of all registered chains. With a chain parameter, returns detailed status for that specific chain.',
     {

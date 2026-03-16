@@ -48,8 +48,6 @@ You can set read-only mode independently per MCP server. For example, keep chain
 | `help` | Get daemon documentation for any RPC command |
 | `getblockcount` | Get current block height (lightweight) |
 | `getcurrency` | Get full definition and state of a currency (reserves, weights, prices, fees) |
-| `getnewaddress` | Generate a new transparent R-address for receiving payments |
-| `z_getnewaddress` | Generate a new shielded Sapling address (zs-address) for private transactions |
 | `status` | Check registry freshness and daemon reachability |
 | `refresh_chains` | Re-run chain discovery and rewrite the registry file |
 

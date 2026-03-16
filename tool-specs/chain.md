@@ -296,61 +296,7 @@ Failure — already running:
 
 ---
 
-## 7. `getnewaddress`
-
-**Description:**
-Generate a new transparent (R-address) for receiving payments. Use this to create fresh addresses for identity primaryaddresses, change addresses, or destination addresses. Each call generates a unique address from the wallet's keypool.
-
-**Input Schema:**
-
-| Param | Type | Required | Description |
-|---|---|---|---|
-| `chain` | string | Yes | Chain to generate address on (e.g., `"VRSC"`, `"vrsctest"`) |
-
-**Annotations:**
-```json
-{
-  "readOnlyHint": true,
-  "destructiveHint": false,
-  "idempotentHint": false,
-  "openWorldHint": false
-}
-```
-
-**Output:**
-
-Returns a single string — the new transparent address (e.g., `"RGGfvnyjF1is1jGwPKVSNSDNov6V4aBDMF"`).
-
----
-
-## 8. `z_getnewaddress`
-
-**Description:**
-Generate a new shielded Sapling address (zs-address) for private transactions. Use this to create addresses for identity privateaddress fields or private sends. Each call generates a unique shielded address.
-
-**Input Schema:**
-
-| Param | Type | Required | Description |
-|---|---|---|---|
-| `chain` | string | Yes | Chain to generate address on (e.g., `"VRSC"`, `"vrsctest"`) |
-
-**Annotations:**
-```json
-{
-  "readOnlyHint": true,
-  "destructiveHint": false,
-  "idempotentHint": false,
-  "openWorldHint": false
-}
-```
-
-**Output:**
-
-Returns a single string — the new shielded Sapling address (e.g., `"zs1..."`).
-
----
-
-## 9. `status`
+## 7. `status`
 
 **Description:**
 Check registry freshness and daemon reachability. Use this to verify chain health before starting a workflow, or to debug why calls to other MCPs are failing.
@@ -417,7 +363,7 @@ Single chain:
 
 ---
 
-## 10. `refresh_chains`
+## 8. `refresh_chains`
 
 **Description:**
 Re-run chain discovery and rewrite the chain registry file. Call this after starting a new daemon, stopping a daemon, or when the registry appears stale.
@@ -475,7 +421,7 @@ No parameters. This tool scans the filesystem and all known chains.
 
 ---
 
-## 11. `getblockcount`
+## 9. `getblockcount`
 
 **Description:**
 Get the current block count (height of the longest chain). Returns a single number — the most lightweight way to check the current block height.
@@ -504,7 +450,7 @@ Returns a single number — the current block height.
 
 ---
 
-## 12. `sendrawtransaction`
+## 10. `sendrawtransaction`
 
 **Description:**
 Broadcast a signed raw transaction to the network. Takes a hex-encoded signed transaction and submits it to the local node, which relays it to the network. Returns the transaction hash (txid) on success.
@@ -551,7 +497,7 @@ Returns: `"a3b70a883b11b75ad123a68e1b9e8fa38de44036f8a95e8104cd0c64dcca7b9c"`
 
 ---
 
-## 13. `signrawtransaction`
+## 11. `signrawtransaction`
 
 **Description:**
 Sign inputs of a raw transaction. Takes a hex-encoded transaction and signs it with keys available in the wallet (or with explicitly provided private keys). Returns the signed hex and whether all inputs are fully signed.

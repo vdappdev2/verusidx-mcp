@@ -1,6 +1,6 @@
 {
   "name": "@verusidx/identity-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP server for VerusID identity management — create, update, revoke, recover, sign, and query Verus identities",
   "license": "MIT",
   "type": "module",

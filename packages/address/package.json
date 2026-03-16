@@ -1,11 +1,11 @@
 {
-  "name": "@verusidx/marketplace-mcp",
+  "name": "@verusidx/address-mcp",
   "version": "0.1.2",
-  "description": "MCP server for Verus on-chain marketplace — create, browse, accept, and close offers",
+  "description": "MCP server for Verus address management — generate, validate, and list transparent and shielded addresses",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "verusidx-marketplace-mcp": "./build/index.js"
+    "verusidx-address-mcp": "./build/index.js"
   },
   "files": [
     "build"

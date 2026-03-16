@@ -1,16 +1,17 @@
 # VerusIDX MCP Servers
 
-A suite of [MCP](https://modelcontextprotocol.io/) servers for the [Verus](https://verus.io/) blockchain ecosystem. Each server is focused on a specific workflow — chain management, identity, currency transfers, currency creation, and marketplace trading.
+A suite of [MCP](https://modelcontextprotocol.io/) servers for the [Verus](https://verus.io/) blockchain ecosystem. Each server is focused on a specific workflow — chain management, identity, address management, currency transfers, currency creation, and marketplace trading.
 
 ## Servers
 
 | Package | Tools | Purpose |
 |---|---|---|
-| [`@verusidx/chain-mcp`](packages/chain/) | 13 | Foundation — chain discovery, daemon management, health checks, currency lookup, address generation, raw transactions, RPC help |
+| [`@verusidx/chain-mcp`](packages/chain/) | 11 | Foundation — chain discovery, daemon management, health checks, currency lookup, raw transactions, RPC help |
 | [`@verusidx/identity-mcp`](packages/identity/) | 13 | Create, manage, query, and sign with VerusIDs |
 | [`@verusidx/send-mcp`](packages/send/) | 8 | Send, convert, and transfer currency; check balances and conversions |
 | [`@verusidx/definecurrency-mcp`](packages/definecurrency/) | 1 | Define and launch new currencies (tokens, baskets, ID control tokens) |
 | [`@verusidx/marketplace-mcp`](packages/marketplace/) | 5 | On-chain offers and trades |
+| [`@verusidx/address-mcp`](packages/address/) | 5 | Generate, validate, and list transparent and shielded addresses |
 
 **`chain-mcp` is the foundation.** It discovers running daemons and writes a registry file that all other servers read. Install it first and run `refresh_chains` before using any other server.
 
@@ -37,23 +38,23 @@ Then in your MCP client, call `refresh_chains` to discover local daemons. Every 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────┐
-│  MCP Client (Claude Code, Cursor, etc.)         │
-└──────┬──────┬──────┬──────┬──────┬──────────────┘
-       │      │      │      │      │  stdio
-  ┌────▼──┐ ┌─▼───┐ ┌▼────┐ ┌▼───┐ ┌▼──────────┐
-  │ chain │ │ id  │ │send│ │def │ │marketplace│
-  │  mcp  │ │ mcp │ │mcp │ │mcp │ │   mcp     │
-  └──┬────┘ └──┬──┘ └─┬──┘ └─┬──┘ └─────┬─────┘
-     │         │      │      │           │
-  ┌──▼─────────▼──────▼──────▼───────────▼──────┐
-  │            @verusidx/shared                  │
-  │  registry · rpc-client · errors · audit      │
-  └──────────────────┬───────────────────────────┘
-                     │  JSON-RPC over HTTP
-  ┌──────────────────▼───────────────────────────┐
-  │          verusd (one or more daemons)         │
-  └──────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  MCP Client (Claude Code, Cursor, etc.)                  │
+└──┬──────┬──────┬──────┬──────┬──────────┬────────────────┘
+   │      │      │      │      │          │  stdio
+ ┌─▼───┐ ┌▼───┐ ┌▼────┐ ┌▼───┐ ┌▼──────────┐ ┌▼────┐
+ │chain│ │ id │ │send│ │def │ │marketplace│ │addr │
+ │ mcp │ │mcp │ │mcp │ │mcp │ │   mcp     │ │ mcp │
+ └──┬──┘ └─┬──┘ └─┬──┘ └─┬──┘ └─────┬─────┘ └──┬──┘
+    │       │      │      │          │           │
+ ┌──▼───────▼──────▼──────▼──────────▼───────────▼───┐
+ │              @verusidx/shared                      │
+ │  registry · rpc-client · errors · audit            │
+ └────────────────────┬──────────────────────────────┘
+                      │  JSON-RPC over HTTP
+ ┌────────────────────▼──────────────────────────────┐
+ │           verusd (one or more daemons)             │
+ └───────────────────────────────────────────────────┘
 ```
 
 - **Shared library** (`@verusidx/shared`) — registry reader, RPC client with credential caching, error normalization, audit logging, spending limits, read-only guard. Zero runtime dependencies.
@@ -113,7 +114,8 @@ verusidx-mcp/
 │   ├── identity/        # @verusidx/identity-mcp
 │   ├── send/            # @verusidx/send-mcp
 │   ├── definecurrency/  # @verusidx/definecurrency-mcp
-│   └── marketplace/     # @verusidx/marketplace-mcp
+│   ├── marketplace/     # @verusidx/marketplace-mcp
+│   └── address/         # @verusidx/address-mcp
 └── tool-specs/          # Agent-facing tool description specs
 ```
 
