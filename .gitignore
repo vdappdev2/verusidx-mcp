@@ -24,6 +24,7 @@ Thumbs.db
 # Local-only files
 keeplocal/
 .mcp.json
+tool-specs/vdxf-system-keys.md
 
 # Debug & logs
 *.log
