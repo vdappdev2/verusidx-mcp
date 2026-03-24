@@ -412,7 +412,7 @@ When accepting an offer that involves an identity (in `deliver` or `accept`), al
 | `fromaddress` | string | Yes | VerusID, Sapling address, or wildcard address to send funds/fees from. `"*"`, `"R*"`, or `"i*"` are valid wildcards. |
 | `txid` | string | Yes* | Transaction ID of the offer to accept (from `getoffers` or `makeoffer` output). *Either `txid` or `tx` is required. |
 | `tx` | string | Yes* | Hex transaction to complete (from `makeoffer` with `returntx=true`). *Either `txid` or `tx` is required. |
-| `changeaddress` | string | No | Transparent address or VerusID for change. |
+| `changeaddress` | string | Yes | Transparent address or VerusID for change. |
 | `deliver` | object/string | Yes | What the taker delivers to the maker — `"idname@"` (identity) or `{"currency": "name", "amount": n}` (currency). |
 | `accept` | object | Yes | What the taker receives — `{"address": "addr", "currency": "name", "amount": n}` (currency) or full identity definition (identity). |
 | `returntx` | boolean | No | If `true`, return signed transaction hex instead of broadcasting. Default: `false`. |

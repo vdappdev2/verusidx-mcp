@@ -103,7 +103,7 @@ export function registerTools(server: McpServer): void {
       'Create a new on-chain atomic swap offer. Offers are fully decentralized — no intermediary, no escrow. The offer transaction locks the offered asset on-chain until the offer is taken, expires, or is closed. Supports currency-for-currency, currency-for-identity, identity-for-currency, and identity-for-identity swaps. For currency offers, use {"currency": "name", "amount": n}. For identity offers (without control tokens), use {"identity": "name@"} or a full identity definition. If an identity has a control token (flags: 5), offer/request the control token as a currency instead: {"currency": "idname.parent", "amount": 0.00000001}. Always include parent in identity definitions.',
       {
         chain: z.string().describe('Chain to transact on (e.g., "VRSC", "vrsctest")'),
-        fromaddress: z.string().describe('VerusID or wildcard address to send funds from ("*", "R*", or "i*").'),
+        fromaddress: z.string().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*", or "z*" for private txs).'),
         offer: z.record(z.unknown()).describe('What to offer — {"currency": "name", "amount": n} for currency, or {"identity": "name@"} / full identity definition for identity.'),
         changeaddress: z.string().describe('Transparent address or VerusID ("ID@") for change.'),
         expiryheight: z.number().optional().describe('Block height at which this offer expires. Default: current height + 20 (~20 minutes). Set higher for marketplace listings.'),
@@ -164,10 +164,10 @@ export function registerTools(server: McpServer): void {
       'Accept an existing on-chain offer. Creates and posts a transaction that atomically executes the exchange — both sides swap in a single transaction, or neither does. The offer transaction must have at least 1 confirmation before it can be taken. Before taking, verify the offer hasn\'t expired by checking blockexpiry against current block height. deliver is what you give, accept is what you get. For currency: deliver {"currency": "name", "amount": n}, accept {"address": "addr", "currency": "name", "amount": n}. For identity: deliver "name@" (string), accept is full identity definition with parent. If the identity has a control token, use control token currency instead.',
       {
         chain: z.string().describe('Chain to transact on (e.g., "VRSC", "vrsctest")'),
-        fromaddress: z.string().describe('VerusID, Sapling address, or wildcard address to send funds/fees from.'),
+        fromaddress: z.string().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*", or "z*" for private txs).'),
         txid: z.string().optional().describe('Transaction ID of the offer to accept (from getoffers or makeoffer). Either txid or tx is required.'),
         tx: z.string().optional().describe('Hex transaction to complete (from makeoffer with returntx=true). Either txid or tx is required.'),
-        changeaddress: z.string().optional().describe('Transparent address or VerusID for change.'),
+        changeaddress: z.string().describe('Transparent address or VerusID for change.'),
         deliver: z.union([z.string(), z.record(z.unknown())]).describe('What the taker delivers — "name@" (identity) or {"currency": "name", "amount": n} (currency).'),
         accept: z.record(z.unknown()).describe('What the taker receives — {"address": "addr", "currency": "name", "amount": n} (currency) or full identity definition (identity).'),
         returntx: z.boolean().optional().describe('If true, return signed transaction hex instead of broadcasting. Default: false.'),
@@ -198,7 +198,7 @@ export function registerTools(server: McpServer): void {
           };
           if (txid !== undefined) takeObj.txid = txid;
           if (tx !== undefined) takeObj.tx = tx;
-          if (changeaddress !== undefined) takeObj.changeaddress = changeaddress;
+          takeObj.changeaddress = changeaddress;
 
           const params: unknown[] = [fromaddress, takeObj];
           if (returntx !== undefined || feeamount !== undefined) {

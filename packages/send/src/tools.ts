@@ -259,7 +259,7 @@ export function registerTools(server: McpServer): void {
       'Send, convert, or cross-chain transfer currency. This is the primary tool for moving value on Verus. Supports simple sends, currency conversions through fractional baskets, cross-chain transfers, currency/ID exports, minting, burning, and data storage. Returns an operation ID (opid) — poll z_getoperationstatus with the opid to check for completion and get the resulting transaction ID. If returntxtemplate is true, returns the raw transaction template instead of broadcasting. IMPORTANT: when converting between two reserve currencies (neither is the basket itself), you MUST include "via" with the basket name in the output — use getcurrencyconverters to find valid baskets. For more options (getcurrencyconverters filters out low-reserve baskets), use listcurrencies with {"converter":["currency1","currency2"]} to discover all baskets holding those reserves.',
       {
         chain: z.string().describe('Chain to send on (e.g., "VRSC", "vrsctest")'),
-        fromaddress: z.string().describe('Source address for funds. Can be a VerusID ("alice@"), transparent address ("R..."), Sapling address ("zs..."), or wildcard ("*", "R*", "i*").'),
+        fromaddress: z.string().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*", or "z*" for private txs).'),
         outputs: z.array(z.object({
           address: z.string().describe('Destination address — VerusID, R-address, z-address. For cross-chain: append "@chainname".'),
           amount: z.number().describe('Amount to send in the source currency. Can be 0 for export-only operations.'),

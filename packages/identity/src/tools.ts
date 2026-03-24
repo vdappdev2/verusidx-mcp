@@ -251,7 +251,7 @@ export function registerTools(server: McpServer): void {
         controladdress: z.string().describe('Address that will control this commitment. Must be present in the current wallet. This is not necessarily the address that will control the actual identity.'),
         referralidentity: z.string().optional().describe('Friendly name or i-address of a referral identity, used to lower network cost of the ID.'),
         parentnameorid: z.string().optional().describe('Parent name or currency i-address. Dictates issuance rules and pricing. Only for PBaaS sub-identities.'),
-        sourceoffunds: z.string().optional().describe('Address to use as source of funds. Default: transparent wildcard "*".'),
+        sourceoffunds: z.string().optional().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*"). Sub-ID creation requires a transparent address.'),
       },
       async ({ chain, name, controladdress, referralidentity, parentnameorid, sourceoffunds }) => {
         try {
@@ -298,7 +298,7 @@ export function registerTools(server: McpServer): void {
         jsonidregistration: z.record(z.unknown()).describe('Registration object containing: txid (from registernamecommitment), namereservation {name, salt, referral}, and identity definition {name, parent, primaryaddresses, minimumsignatures}. Only include revocationauthority/recoveryauthority if delegating to a DIFFERENT identity (defaults to self) — accepts friendly name (e.g., "alice@") or i-address. TIMELOCK: Do NOT include timelock unless you deliberately intend to set an absolute block height lock. An absolute lock CANNOT be removed by updateidentity — only by revoke+recover. If setting a timelock, ensure revocationauthority and recoveryauthority are set to identities that can perform the revoke+recover to remove it. Omit timelock to default to 0 (unlocked). Use setidentitytimelock after registration for safe timelock configuration. Omit privateaddress unless explicitly assigning one.'),
         returntx: z.boolean().optional().describe('If true, return the signed transaction hex instead of broadcasting. Default: false.'),
         feeoffer: z.number().optional().describe('Amount to offer miner/staker for the registration fee. Default: standard price.'),
-        sourceoffunds: z.string().optional().describe('Address to use as source of funds. Default: transparent wildcard "*".'),
+        sourceoffunds: z.string().optional().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*"). Sub-ID creation requires a transparent address.'),
       },
       async ({ chain, jsonidregistration, returntx, feeoffer, sourceoffunds }) => {
         try {
@@ -351,7 +351,7 @@ export function registerTools(server: McpServer): void {
         returntx: z.boolean().optional().describe('If true, return signed transaction hex instead of broadcasting. Default: false.'),
         tokenupdate: z.boolean().optional().describe('If true, use the tokenized ID control token for authority. Default: false.'),
         feeoffer: z.number().optional().describe('Non-standard fee amount.'),
-        sourceoffunds: z.string().optional().describe('Address to source funds from, to preserve privacy.'),
+        sourceoffunds: z.string().optional().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*", or "z*" for private txs).'),
       },
       async ({ chain, jsonidentity, returntx, tokenupdate, feeoffer, sourceoffunds }) => {
         try {
@@ -401,7 +401,7 @@ export function registerTools(server: McpServer): void {
         returntx: z.boolean().optional().describe('If true, return signed transaction hex instead of broadcasting. Default: false.'),
         tokenrevoke: z.boolean().optional().describe('If true, use the tokenized ID control token to revoke. Default: false.'),
         feeoffer: z.number().optional().describe('Non-standard fee amount.'),
-        sourceoffunds: z.string().optional().describe('Address to source funds from, to preserve privacy.'),
+        sourceoffunds: z.string().optional().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*", or "z*" for private txs).'),
       },
       async ({ chain, identity, returntx, tokenrevoke, feeoffer, sourceoffunds }) => {
         try {
@@ -449,7 +449,7 @@ export function registerTools(server: McpServer): void {
         returntx: z.boolean().optional().describe('If true, return signed transaction hex instead of broadcasting. Default: false.'),
         tokenrecover: z.boolean().optional().describe('If true, use the tokenized ID control token to recover. Default: false.'),
         feeoffer: z.number().optional().describe('Non-standard fee amount.'),
-        sourceoffunds: z.string().optional().describe('Address to source funds from, to preserve privacy.'),
+        sourceoffunds: z.string().optional().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*", or "z*" for private txs).'),
       },
       async ({ chain, jsonidentity, returntx, tokenrecover, feeoffer, sourceoffunds }) => {
         try {
@@ -500,7 +500,7 @@ export function registerTools(server: McpServer): void {
         setunlockdelay: z.number().optional().describe('Number of blocks to delay after unlock request. Mutually exclusive with unlockatblock.'),
         returntx: z.boolean().optional().describe('If true, return signed transaction hex instead of broadcasting. Default: false.'),
         feeoffer: z.number().optional().describe('Non-standard fee amount.'),
-        sourceoffunds: z.string().optional().describe('Address to source funds from, to preserve privacy.'),
+        sourceoffunds: z.string().optional().describe('Source address for funds. If the user has not specified a preferred address, ask which address to use or if they prefer a wildcard ("*", "R*", "i*", or "z*" for private txs).'),
       },
       async ({ chain, identity, unlockatblock, setunlockdelay, returntx, feeoffer, sourceoffunds }) => {
         try {
