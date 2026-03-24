@@ -1,0 +1,239 @@
+# verusidx-mcp — Full Reference
+
+> 7 MCP servers giving AI agents direct local access to the Verus blockchain — 48 tools, zero cloud dependencies.
+
+## Overview
+
+verusidx-mcp is a suite of Model Context Protocol (MCP) servers for the Verus blockchain. MCP is Anthropic's open protocol for connecting AI models to external tools. Each server runs as a local stdio process, communicating with a local Verus daemon (verusd) via JSON-RPC over localhost. No API keys, no cloud services, no intermediaries between the agent and the chain.
+
+The project is a pnpm monorepo with 8 packages: 7 MCP servers and 1 shared library.
+
+## Architecture
+
+```
+AI Client (Claude Code, Cursor, etc.)
+    |
+    |  stdio (local process, no network)
+    v
+verusidx MCP servers (7 servers, 48 tools)
+    |
+    |  JSON-RPC over localhost
+    v
+verusd (one or more local Verus daemons)
+```
+
+- Each MCP server runs as a separate process via stdio transport
+- @verusidx/shared provides: registry reader, RPC client with credential caching, error normalization (10 categories), audit logging, spending limit enforcement, read-only guard
+- Chain registry (chains.json) is written atomically by chain-mcp, read by all other servers via stat()-based cache invalidation
+- Credentials are read from daemon .conf files — never stored by MCP servers
+
+## Prerequisites
+
+- A running Verus daemon (verusd). Download from https://verus.io/wallet
+- Node.js >= 18.0.0
+
+## Installation
+
+Add servers to your MCP client config. chain-mcp is the foundation — install it first:
+
+```json
+{
+  "mcpServers": {
+    "verusidx-chain": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/chain-mcp"]
+    },
+    "verusidx-identity": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/identity-mcp"]
+    },
+    "verusidx-send": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/send-mcp"]
+    },
+    "verusidx-data": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/data-mcp"]
+    },
+    "verusidx-address": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/address-mcp"]
+    },
+    "verusidx-marketplace": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/marketplace-mcp"]
+    },
+    "verusidx-definecurrency": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/definecurrency-mcp"]
+    }
+  }
+}
+```
+
+After starting, call `refresh_chains` to discover local daemons. Every tool requires a `chain` parameter (e.g., "VRSC", "vrsctest") — there is no default chain.
+
+## Complete Tool List
+
+### @verusidx/chain-mcp (11 tools)
+
+Foundation server. Install first.
+
+| Tool | Type | Description |
+|------|------|-------------|
+| getinfo | read | Get blockchain and node info |
+| getwalletinfo | read | Get wallet balances and state |
+| help | read | Get daemon RPC documentation for any command |
+| getblockcount | read | Get current block height (lightweight) |
+| getcurrency | read | Get full currency definition and state (reserves, weights, prices, fees) |
+| status | read | Check registry freshness and daemon reachability |
+| refresh_chains | discovery | Re-scan filesystem and rewrite chain registry |
+| verusd | system | Start a daemon instance |
+| stop | write | Stop a running daemon |
+| sendrawtransaction | write | Broadcast a signed raw transaction hex |
+| signrawtransaction | write | Sign inputs of a raw transaction |
+
+### @verusidx/identity-mcp (11 tools)
+
+VerusID identity management.
+
+| Tool | Type | Description |
+|------|------|-------------|
+| getidentity | read | Look up identity by name or i-address |
+| getidentitycontent | read | Get identity content with optional VDXF key filter and height range |
+| getidentityhistory | read | Full revision history of an identity |
+| getvdxfid | read | Resolve VDXF URI to on-chain i-address |
+| listidentities | read | List wallet's VerusIDs (spendable, signable, watch-only) |
+| registernamecommitment | write | Step 1 of identity registration — reserve name |
+| registeridentity | write | Step 2 of identity registration — register with commitment |
+| updateidentity | write | Update identity fields |
+| revokeidentity | write | Revoke an identity |
+| recoveridentity | write | Recover a compromised identity |
+| setidentitytimelock | write | Set or modify identity timelock |
+
+### @verusidx/send-mcp (8 tools)
+
+Currency operations.
+
+| Tool | Type | Description |
+|------|------|-------------|
+| getcurrencybalance | read | Multi-currency balances for an address |
+| getcurrencyconverters | read | Find fractional baskets for currency conversions |
+| estimateconversion | read | Preview conversion output with fees and slippage |
+| listcurrencies | read | List or search currencies with filters |
+| z_getoperationstatus | read | Check status of async operations |
+| gettransaction | read | Get transaction details by txid |
+| listtransactions | read | List recent wallet transactions with pagination |
+| sendcurrency | write | Send, convert, or cross-chain transfer currency (async, returns opid) |
+
+### @verusidx/data-mcp (7 tools)
+
+On-chain data retrieval, decryption, signing, and verification.
+
+| Tool | Type | Description |
+|------|------|-------------|
+| z_listreceivedbyaddress | read | List transactions/data received at a z-address |
+| decryptdata | read | Decrypt on-chain data with viewing key or wallet keys |
+| z_exportviewingkey | read | Export viewing key for read-only decryption access |
+| z_viewtransaction | read | View detailed shielded transaction information |
+| signdata | read | Sign data with a VerusID or address (available in read-only mode) |
+| verifysignature | read | Verify a signature (available in read-only mode) |
+| z_importviewingkey | write | Import a viewing key for decryption access |
+
+### @verusidx/marketplace-mcp (5 tools)
+
+On-chain atomic swap marketplace.
+
+| Tool | Type | Description |
+|------|------|-------------|
+| getoffers | read | Browse offers for a currency or identity |
+| listopenoffers | read | List wallet's open offers |
+| makeoffer | write | Create an on-chain atomic swap offer |
+| takeoffer | write | Accept an existing offer (atomic exchange) |
+| closeoffers | write | Close/cancel offers and reclaim locked funds |
+
+### @verusidx/address-mcp (5 tools)
+
+Address management.
+
+| Tool | Type | Description |
+|------|------|-------------|
+| validateaddress | read | Validate address and return info |
+| getaddressesbyaccount | read | List transparent addresses for an account |
+| z_listaddresses | read | List shielded addresses in wallet |
+| getnewaddress | write | Generate a new transparent R-address |
+| z_getnewaddress | write | Generate a new shielded Sapling zs-address |
+
+### @verusidx/definecurrency-mcp (1 tool)
+
+Currency definition.
+
+| Tool | Type | Description |
+|------|------|-------------|
+| definecurrency | write | Define a new currency — returns signed tx hex to broadcast via sendrawtransaction |
+
+## Configuration
+
+### Environment Variables (all servers)
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| VERUSIDX_READ_ONLY | Set to "true" to disable write tools entirely | false |
+| VERUSIDX_AUDIT_LOG | Set to "false" to disable audit logging | true |
+| VERUSIDX_AUDIT_DIR | Custom audit log directory | OS config dir |
+| VERUSIDX_SPENDING_LIMITS_PATH | Custom path to spending-limits.json | OS config dir |
+
+### Environment Variables (chain-mcp only)
+
+| Variable | Description |
+|----------|-------------|
+| VERUSIDX_DATA_DIR | Non-standard Verus data directory |
+| VERUSIDX_EXTRA_CHAINS | Remote daemons (format: name:host:port:user:pass) |
+| VERUSIDX_BIN_PATH | Directory containing verusd binary |
+
+### Read-Only Mode
+
+Set `VERUSIDX_READ_ONLY=true` per-server via MCP client config env. Write tools are not registered — they don't appear in the tool list. Set independently per server for fine-grained control (e.g., identity-mcp read-write, send-mcp read-only).
+
+Exceptions: signdata and verifysignature (data-mcp) remain available in read-only mode — signing doesn't spend funds or change state.
+
+### Spending Limits
+
+Servers that send funds (send-mcp, marketplace-mcp) enforce per-currency limits via spending-limits.json. Default created on first run: `{ "VRSC": 10 }`. Limits are checked before the RPC call — blocked transactions never reach the daemon.
+
+File location:
+- macOS: ~/Library/Application Support/verusidx-mcp/spending-limits.json
+- Linux: ~/.config/verusidx-mcp/spending-limits.json
+- Windows: %APPDATA%\verusidx-mcp\spending-limits.json
+
+Format: `{ "VRSC": 100, "Bridge.vETH": 0.5 }`. Currency names are case-insensitive. Multi-output sends sum all outputs per currency.
+
+### Audit Logging
+
+All write operations are logged to date-stamped append-only JSONL files (0600 permissions). Each entry records: timestamp, server, tool, chain, full parameters, result, success flag.
+
+Log location:
+- macOS: ~/Library/Application Support/verusidx-mcp/audit/
+- Linux: ~/.config/verusidx-mcp/audit/
+- Windows: %APPDATA%\verusidx-mcp\audit\
+
+## About Verus
+
+Verus is an open-source, fair-launch blockchain (2018, no ICO, no premine, no VC funding). Hybrid PoW/PoS consensus with CPU-mineable VerusHash 2.2. No smart contracts — identity, data storage, DeFi conversions, atomic swaps, privacy (Sapling zk-proofs), and cross-chain bridges (PBaaS) are implemented as consensus-level protocol features.
+
+Key concepts:
+- VerusID: protocol-level identity with addresses, signing keys, revocation/recovery authorities, on-chain data storage (contentmultimap), and optional shielded private address
+- VDXF: Verus Data Exchange Format — namespaced key system for on-chain data (e.g., vrsc::identity.profile.name)
+- PBaaS: Public Blockchains as a Service — launch independent interoperable chains with protocol-level bridges
+- Fractional baskets: multi-reserve currencies with automatic AMM-style conversions, MEV-resistant
+- Sapling: zero-knowledge proof system for shielded (private) transactions
+
+## Links
+
+- Source: https://github.com/vdappdev2/verusidx-mcp
+- npm: https://www.npmjs.com/search?q=%40verusidx
+- Verus: https://verus.io
+- Verus docs: https://docs.verus.io
+- Verus Discord: https://verus.io/discord
+- MCP specification: https://modelcontextprotocol.io
+- License: MIT

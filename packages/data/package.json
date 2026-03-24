@@ -1,0 +1,52 @@
+{
+  "name": "@verusidx/data-mcp",
+  "version": "0.1.3",
+  "description": "MCP server for Verus on-chain data retrieval, decryption, signing, and verification",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "directory": "packages/data"
+  },
+  "homepage": "https://github.com/vdappdev2/verusidx-mcp#readme",
+  "bugs": "https://github.com/vdappdev2/verusidx-mcp/issues",
+  "keywords": [
+    "verus",
+    "mcp",
+    "model-context-protocol",
+    "blockchain",
+    "ai-agents",
+    "data",
+    "encryption",
+    "decryption",
+    "signing",
+    "verification",
+    "privacy",
+    "sapling",
+    "shielded-transactions"
+  ],
+  "type": "module",
+  "bin": {
+    "verusidx-data-mcp": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.0",
+    "@verusidx/shared": "workspace:*",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

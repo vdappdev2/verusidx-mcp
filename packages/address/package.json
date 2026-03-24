@@ -1,8 +1,26 @@
 {
   "name": "@verusidx/address-mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "MCP server for Verus address management — generate, validate, and list transparent and shielded addresses",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "directory": "packages/address"
+  },
+  "homepage": "https://github.com/vdappdev2/verusidx-mcp#readme",
+  "bugs": "https://github.com/vdappdev2/verusidx-mcp/issues",
+  "keywords": [
+    "verus",
+    "mcp",
+    "model-context-protocol",
+    "blockchain",
+    "ai-agents",
+    "address",
+    "privacy",
+    "sapling",
+    "shielded-transactions"
+  ],
   "type": "module",
   "bin": {
     "verusidx-address-mcp": "./build/index.js"

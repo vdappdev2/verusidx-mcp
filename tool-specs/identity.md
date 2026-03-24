@@ -1,10 +1,10 @@
 # verusidx-identity-mcp — Tool Specs
 
-Create, manage, query, and sign with VerusIDs.
+Create, manage, and query VerusIDs. For data signing and verification, see data-mcp (`signdata`, `verifysignature`).
 
 Every RPC tool requires a `chain` parameter — no default, no auto-selection. The shared library routes the RPC call to the correct daemon by looking up host:port in the chain registry.
 
-**Read-only mode (`VERUSIDX_READ_ONLY=true`):** All write tools are disabled **except** `signdata` and `verifysignature`. Signing does not spend funds or change blockchain state — it reads the private key but does not modify wallet state. Read-only mode is per-MCP: identity-mcp can be read-write while send-mcp is read-only, or vice versa.
+**Read-only mode (`VERUSIDX_READ_ONLY=true`):** All write tools are disabled. Read-only mode is per-MCP: identity-mcp can be read-write while send-mcp is read-only, or vice versa.
 
 ---
 
@@ -616,108 +616,12 @@ Returns an array of identity objects, each in the same format as `getidentity` o
 
 ---
 
-## 12. `signdata`
+## Environment Variables
 
-**Description:**
-Sign data with a VerusID or transparent address. Generates a hash of the provided data and signs it. Supports multiple input modes and hash algorithms. Can sign a single piece of data or build a Merkle Mountain Range (MMR) over multiple items.
+| Variable | Description |
+|---|---|
+| `VERUSIDX_READ_ONLY` | `true` to disable all write tools (`registernamecommitment`, `registeridentity`, `updateidentity`, `revokeidentity`, `recoveridentity`, `setidentitytimelock`). All read tools remain available. |
+| `VERUSIDX_AUDIT_LOG` | `false` to disable audit logging (default: enabled) |
+| `VERUSIDX_AUDIT_DIR` | Custom audit log directory |
 
-For multi-sig identities, pass an existing partial `signature` to accumulate signatures.
-
-**Available in read-only mode** — signing does not spend funds or change blockchain/wallet state.
-
-**Input Schema:**
-
-| Param | Type | Required | Description |
-|---|---|---|---|
-| `chain` | string | Yes | Chain to sign on (e.g., `"VRSC"`, `"vrsctest"`) |
-| `address` | string | Yes | VerusID name or t-address to sign with. A t-address produces a simple signature. |
-| `message` | string | No | Text message to sign. |
-| `filename` | string | No | File path to sign. |
-| `messagehex` | string | No | Hex-encoded data to sign. |
-| `messagebase64` | string | No | Base64-encoded data to sign. |
-| `datahash` | string | No | Pre-computed 256-bit hex hash to sign directly. |
-| `mmrdata` | array | No | Array of data objects for MMR signing. Each element: `{"filename" or "message" or "serializedhex" or "serializedbase64" or "vdxfdata" or "datahash": "value"}`. |
-| `mmrsalt` | array | No | Array of salt strings to protect privacy of MMR leaf nodes. |
-| `mmrhashtype` | string | No | Hash type for MMR: `"sha256"`, `"sha256D"`, `"blake2b"`, `"keccak256"`. Default: `"blake2b"`. |
-| `prefixstring` | string | No | Extra string hashed during signing — must be supplied for verification. |
-| `vdxfkeys` | string[] | No | Array of VDXF keys or i-addresses to bind to the signature. |
-| `vdxfkeynames` | string[] | No | Array of VDXF key names or friendly name IDs (no i-addresses). |
-| `boundhashes` | string[] | No | Array of hex hashes to bind to the signature. |
-| `hashtype` | string | No | Hash algorithm: `"sha256"` (default), `"sha256D"`, `"blake2b"`, `"keccak256"`. |
-| `signature` | string | No | Existing base64 signature for multi-sig accumulation. |
-| `encrypttoaddress` | string | No | Sapling address to encrypt data to. All data decryptable with the incoming viewing key. |
-| `createmmr` | boolean | No | If true (or if multiple items are provided), returns MMR data and root signature. |
-
-Exactly one data input mode must be provided: `message`, `filename`, `messagehex`, `messagebase64`, `datahash`, or `mmrdata`.
-
-**Annotations:**
-```json
-{
-  "readOnlyHint": true,
-  "destructiveHint": false,
-  "idempotentHint": true,
-  "openWorldHint": false
-}
-```
-
-**Output:**
-
-Returns the daemon's response directly:
-
-| Field | Type | Description |
-|---|---|---|
-| `hash` | string | Hex hash of the signed data (single item) |
-| `hashes` | string[] | Array of hex hashes (MMR mode, alternate to `hash`) |
-| `mmrroot` | string | (MMR only) Root hash of the Merkle Mountain Range |
-| `signature` | string | Base64-encoded signature (of the data hash or MMR root) |
-| `vdxfkeys` | string[] | Bound VDXF keys (echoed back) |
-| `vdxfkeynames` | string[] | Bound VDXF key names (echoed back) |
-| `boundhashes` | string[] | Bound hashes (echoed back) |
-| `hashtype` | string | Hash algorithm used |
-
----
-
-## 13. `verifysignature`
-
-**Description:**
-Verify a signature produced by `signdata`. Checks that the signature is valid for the given data and identity/address. By default, validates against the identity's keys at the block height stored in the signature — use `checklatest` to verify against the identity's current keys instead.
-
-**Input Schema:**
-
-| Param | Type | Required | Description |
-|---|---|---|---|
-| `chain` | string | Yes | Chain to verify on (e.g., `"VRSC"`, `"vrsctest"`) |
-| `address` | string | Yes | VerusID name or t-address to verify against. |
-| `message` | string | No | Text message that was signed. |
-| `filename` | string | No | File path that was signed. |
-| `messagehex` | string | No | Hex-encoded data that was signed. |
-| `messagebase64` | string | No | Base64-encoded data that was signed. |
-| `datahash` | string | No | Pre-computed 256-bit hex hash that was signed. |
-| `prefixstring` | string | No | Prefix string used during signing (must match). |
-| `vdxfkeys` | string[] | No | VDXF keys bound during signing (must match). |
-| `vdxfkeynames` | string[] | No | VDXF key names bound during signing (must match). |
-| `boundhashes` | string[] | No | Hashes bound during signing (must match). |
-| `hashtype` | string | No | Hash algorithm used during signing. Default: `"sha256"`. |
-| `signature` | string | Yes | Base64-encoded signature to verify. |
-| `checklatest` | boolean | No | If true, verify against the identity's current keys. Default: `false` (verify against keys at the signing height stored in the signature). |
-
-Exactly one data input mode must be provided: `message`, `filename`, `messagehex`, `messagebase64`, or `datahash`.
-
-**Annotations:**
-```json
-{
-  "readOnlyHint": true,
-  "destructiveHint": false,
-  "idempotentHint": true,
-  "openWorldHint": false
-}
-```
-
-**Output:**
-
-Returns the daemon's response directly:
-
-| Field | Type | Description |
-|---|---|---|
-| `hash` | string | Hex hash of the verified data |
-| `signature` | string | The verified signature (echoed back) |
+> **Note:** `signdata` and `verifysignature` have moved to **data-mcp** as of v0.1.3. They are fundamentally data operations, not identity operations.

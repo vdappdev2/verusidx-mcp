@@ -45,12 +45,23 @@ const CODE_TO_CATEGORY: Record<number, ErrorCategory> = {
  * Checked in order — first match wins.
  */
 const MESSAGE_PATTERNS: Array<{ pattern: RegExp; category: ErrorCategory }> = [
+  // Identity / currency not found
   { pattern: /identity.*not found/i, category: 'IDENTITY_NOT_FOUND' },
   { pattern: /cannot find.*identity/i, category: 'IDENTITY_NOT_FOUND' },
   { pattern: /no such identity/i, category: 'IDENTITY_NOT_FOUND' },
+  { pattern: /invalid identity/i, category: 'IDENTITY_NOT_FOUND' },
   { pattern: /currency.*not found/i, category: 'CURRENCY_NOT_FOUND' },
   { pattern: /cannot find.*currency/i, category: 'CURRENCY_NOT_FOUND' },
   { pattern: /no such currency/i, category: 'CURRENCY_NOT_FOUND' },
+  // Address / key errors (code -5 catch-alls that aren't identity/currency)
+  { pattern: /invalid.*z?addr/i, category: 'INVALID_ADDRESS' },
+  { pattern: /invalid.*address/i, category: 'INVALID_ADDRESS' },
+  { pattern: /invalid.*viewing key/i, category: 'INVALID_KEY' },
+  { pattern: /wallet already contains/i, category: 'INVALID_KEY' },
+  // Decryption errors
+  { pattern: /invalid data descriptor/i, category: 'DECRYPT_FAILED' },
+  { pattern: /cannot decrypt/i, category: 'DECRYPT_FAILED' },
+  // Generic
   { pattern: /insufficient funds/i, category: 'INSUFFICIENT_FUNDS' },
   { pattern: /invalid.*param/i, category: 'INVALID_PARAMS' },
 ];
@@ -76,8 +87,9 @@ export function normalizeRpcError(code: number, message: string): VerusError {
         return new VerusError(category, message, code);
       }
     }
-    // Default -5 to identity not found (most common case)
-    return new VerusError('IDENTITY_NOT_FOUND', message, code);
+    // Default -5: no message pattern matched — fall through to RPC_ERROR
+    // rather than incorrectly categorizing as IDENTITY_NOT_FOUND
+    return new VerusError('RPC_ERROR', message, code);
   }
 
   // Check message patterns for any code

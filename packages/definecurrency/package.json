@@ -1,8 +1,25 @@
 {
   "name": "@verusidx/definecurrency-mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "MCP server for defining Verus currencies — tokens, fractional baskets, centralized currencies, and ERC-20 mapped tokens",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "directory": "packages/definecurrency"
+  },
+  "homepage": "https://github.com/vdappdev2/verusidx-mcp#readme",
+  "bugs": "https://github.com/vdappdev2/verusidx-mcp/issues",
+  "keywords": [
+    "verus",
+    "mcp",
+    "model-context-protocol",
+    "blockchain",
+    "ai-agents",
+    "token-creation",
+    "cryptocurrency",
+    "defi"
+  ],
   "type": "module",
   "bin": {
     "verusidx-definecurrency-mcp": "./build/index.js"

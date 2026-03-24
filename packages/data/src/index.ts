@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { registerTools } from './tools.js';
+
+const server = new McpServer({
+  name: 'verusidx-data-mcp',
+  version: '0.1.3',
+});
+
+registerTools(server);
+
+const transport = new StdioServerTransport();
+await server.connect(transport);
+
+process.on('SIGINT', async () => {
+  await server.close();
+  process.exit(0);
+});

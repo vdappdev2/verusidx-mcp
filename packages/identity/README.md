@@ -1,6 +1,6 @@
 # @verusidx/identity-mcp
 
-MCP server for creating, managing, querying, and signing with VerusIDs. Covers the full identity lifecycle — registration, updates, revocation, recovery, timelocks — plus VDXF key resolution and cryptographic signing/verification.
+MCP server for creating, managing, and querying VerusIDs. Covers the full identity lifecycle — registration, updates, revocation, recovery, timelocks — plus VDXF key resolution. For data signing and verification, see `@verusidx/data-mcp`.
 
 ## Setup
 
@@ -26,16 +26,13 @@ Add to your MCP client config (e.g., Claude Code `claude_desktop_config.json`):
 
 | Variable | Default | Description |
 |---|---|---|
-| `VERUSIDX_READ_ONLY` | `false` | Set to `true` to disable write tools. Read tools and signing tools (`signdata`, `verifysignature`) remain available. |
+| `VERUSIDX_READ_ONLY` | `false` | Set to `true` to disable write tools. Read tools remain available. |
 | `VERUSIDX_AUDIT_LOG` | `true` | Set to `false` to disable audit logging of write operations. |
 | `VERUSIDX_AUDIT_DIR` | OS default | Custom directory for audit log files. |
 
 ### Read-Only Mode
 
-Set `VERUSIDX_READ_ONLY=true` to disable write tools. In read-only mode, 7 tools remain available:
-
-- All read tools (`getidentity`, `getidentitycontent`, `getidentityhistory`, `getvdxfid`, `listidentities`)
-- Signing tools (`signdata`, `verifysignature`) — signing reads the private key but does not spend funds or change blockchain/wallet state
+Set `VERUSIDX_READ_ONLY=true` to disable write tools. In read-only mode, 5 read tools remain available: `getidentity`, `getidentitycontent`, `getidentityhistory`, `getvdxfid`, `listidentities`.
 
 Write tools (`registernamecommitment`, `registeridentity`, `updateidentity`, `revokeidentity`, `recoveridentity`, `setidentitytimelock`) are not registered and won't appear in the tool list.
 
@@ -52,8 +49,6 @@ You can set read-only mode independently per MCP server. For example, keep ident
 | `getidentityhistory` | Full revision history — one snapshot per update transaction |
 | `getvdxfid` | Resolve a VDXF URI to its on-chain i-address, with optional key/hash/index binding |
 | `listidentities` | List wallet's VerusIDs — spendable, signable, and/or watch-only |
-| `signdata` | Sign data with a VerusID or t-address (message, file, hex, base64, hash, or MMR) |
-| `verifysignature` | Verify a signature produced by `signdata` |
 
 ### Write tools (disabled in read-only mode)
 

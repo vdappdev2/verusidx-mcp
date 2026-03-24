@@ -1,0 +1,67 @@
+# verusidx-mcp
+
+> 7 MCP servers giving AI agents direct local access to the Verus blockchain — 48 tools, zero cloud dependencies.
+
+## What this is
+
+verusidx-mcp is a suite of Model Context Protocol (MCP) servers that connect AI agents to the Verus blockchain. MCP is Anthropic's open protocol for giving AI models access to external tools. Each server runs as a local process on the user's machine, communicating with a local Verus daemon (verusd) via JSON-RPC. No API keys, no cloud services, no intermediaries.
+
+## Who it's for
+
+Developers building AI agents that need to transact, hold assets, manage identities, sign data, or interact with blockchain infrastructure — all through natural language via an MCP-compatible client (Claude Code, Cursor, etc.).
+
+## Packages
+
+- @verusidx/chain-mcp (11 tools) — Foundation server. Chain discovery, daemon management, health checks, currency lookup, raw transactions, RPC help.
+- @verusidx/identity-mcp (11 tools) — Create, manage, and query VerusIDs (protocol-level blockchain identities).
+- @verusidx/send-mcp (8 tools) — Send, convert, and transfer currency. Check balances and conversion paths.
+- @verusidx/data-mcp (7 tools) — Retrieve, decrypt, sign, and verify on-chain data. Manage viewing keys for access control.
+- @verusidx/address-mcp (5 tools) — Generate, validate, and list transparent and shielded addresses.
+- @verusidx/marketplace-mcp (5 tools) — On-chain atomic swap offers and trades.
+- @verusidx/definecurrency-mcp (1 tool) — Define and launch new currencies (tokens, fractional baskets, ID control tokens, ERC-20 mapped).
+- @verusidx/shared — Internal shared library (not an MCP server). Zero runtime dependencies.
+
+## Install
+
+Requires a running Verus daemon and Node.js 18+. Add to MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "verusidx-chain": {
+      "command": "npx",
+      "args": ["-y", "@verusidx/chain-mcp"]
+    }
+  }
+}
+```
+
+Then call `refresh_chains` to discover local daemons. Add other servers the same way.
+
+## Key capabilities
+
+- VerusID lifecycle: register, update, revoke, recover, timelock
+- On-chain data storage, retrieval, and decryption (encrypted to z-addresses)
+- Data signing with SHA-256, Blake2b, Keccak-256, and Merkle Mountain Range proofs
+- Viewing key management for selective data access control
+- Currency sends, conversions through fractional baskets, cross-chain transfers
+- Currency creation (tokens, baskets, centralized, ERC-20 mapped)
+- Atomic swap marketplace (currency-for-currency, currency-for-ID, ID-for-ID)
+- Shielded (private) transactions via Sapling zero-knowledge proofs
+
+## Safety features
+
+- Read-only mode: write tools are not registered (not just disabled)
+- Per-currency spending limits enforced before the RPC call
+- Append-only audit logging of all write operations
+- Credentials read from daemon .conf files, never stored by MCP servers
+- 2 runtime dependencies total (MCP SDK + zod)
+
+## Links
+
+- Source: https://github.com/vdappdev2/verusidx-mcp
+- npm: https://www.npmjs.com/search?q=%40verusidx
+- Verus: https://verus.io
+- Verus docs: https://docs.verus.io
+- MCP: https://modelcontextprotocol.io
+- License: MIT

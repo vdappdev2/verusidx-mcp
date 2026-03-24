@@ -1,6 +1,25 @@
 {
   "name": "verusidx-mcp",
   "private": true,
+  "description": "7 MCP servers giving AI agents direct local access to the Verus blockchain — 48 tools, zero cloud dependencies",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vdappdev2/verusidx-mcp"
+  },
+  "homepage": "https://github.com/vdappdev2/verusidx-mcp#readme",
+  "bugs": "https://github.com/vdappdev2/verusidx-mcp/issues",
+  "license": "MIT",
+  "keywords": [
+    "verus",
+    "mcp",
+    "model-context-protocol",
+    "blockchain",
+    "ai-agents",
+    "cryptocurrency",
+    "identity",
+    "defi",
+    "open-source"
+  ],
   "type": "module",
   "engines": {
     "node": ">=18.0.0"
