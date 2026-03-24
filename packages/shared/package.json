@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "url": "git+https://github.com/vdappdev2/verusidx-mcp.git",
     "directory": "packages/shared"
   },
   "homepage": "https://github.com/vdappdev2/verusidx-mcp#readme",

@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "url": "git+https://github.com/vdappdev2/verusidx-mcp.git",
     "directory": "packages/identity"
   },
   "homepage": "https://github.com/vdappdev2/verusidx-mcp#readme",
@@ -23,7 +23,7 @@
   ],
   "type": "module",
   "bin": {
-    "verusidx-identity-mcp": "./build/index.js"
+    "verusidx-identity-mcp": "build/index.js"
   },
   "files": [
     "build"

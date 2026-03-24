@@ -4,7 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "url": "git+https://github.com/vdappdev2/verusidx-mcp.git",
     "directory": "packages/chain"
   },
   "homepage": "https://github.com/vdappdev2/verusidx-mcp#readme",
@@ -22,7 +22,7 @@
   "description": "Foundation MCP server — chain discovery, daemon management, health checks, raw transactions",
   "type": "module",
   "bin": {
-    "verusidx-chain-mcp": "./build/index.js"
+    "verusidx-chain-mcp": "build/index.js"
   },
   "files": [
     "build"
