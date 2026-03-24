@@ -357,6 +357,19 @@ export function registerTools(server: McpServer): void {
         try {
           assertWriteEnabled();
 
+          // Block setting the revoked flag (32768 / 0x8000) via updateidentity.
+          // Use revokeidentity instead — it only sets the flag and preserves all other fields.
+          const identity = jsonidentity as Record<string, unknown>;
+          if (typeof identity.flags === 'number' && (identity.flags & 0x8000) !== 0) {
+            return {
+              content: [{
+                type: 'text' as const,
+                text: 'Error: Do not set flags to the revoked value (32768) via updateidentity. Use revokeidentity instead — it sets the revoked flag safely without changing any other identity fields.',
+              }],
+              isError: true,
+            };
+          }
+
           // updateidentity jsonidentity (returntx) (tokenupdate) (feeoffer) (sourceoffunds)
           const params: unknown[] = [jsonidentity];
           if (returntx !== undefined || tokenupdate !== undefined || feeoffer !== undefined || sourceoffunds !== undefined) {
