@@ -135,7 +135,7 @@ export function registerTools(server: McpServer): void {
 
   server.tool(
     'signdata',
-    'Sign data with a VerusID or transparent address. Generates a hash of the provided data and signs it. Supports multiple input modes (message, file, hex, base64, pre-computed hash) and hash algorithms (sha256, sha256D, blake2b, keccak256). Can sign a single piece of data or build a Merkle Mountain Range (MMR) over multiple items. For multi-sig identities, pass an existing partial signature to accumulate signatures. Can also encrypt data to a z-address via encrypttoaddress — returns both plaintext and encrypted versions with an SSK for selective disclosure. Available in read-only mode — signing does not spend funds or change blockchain/wallet state.',
+    'Sign data with a VerusID or transparent address. Generates a hash of the provided data and signs it. Supports multiple input modes (message, file, hex, base64, pre-computed hash, vdxfdata) and hash algorithms (sha256, sha256D, blake2b, keccak256). Can sign a single piece of data or build a Merkle Mountain Range (MMR) over multiple items. For multi-sig identities, pass an existing partial signature to accumulate signatures. Can also encrypt data to a z-address via encrypttoaddress — returns both plaintext and encrypted versions with an SSK for selective disclosure. Supports vdxfdata input — as a string (equivalent to message) or as a JSON object (VDXF binary serialization, producing a different hash). Use the object form to sign data in the same canonical format as on-chain identity contentmultimap entries. Available in read-only mode — signing does not spend funds or change blockchain/wallet state.',
     {
       chain: z.string().describe('Chain to sign on (e.g., "VRSC", "vrsctest")'),
       address: z.string().describe('VerusID name or R-address to sign with. A R-address produces a simple signature.'),
@@ -154,9 +154,10 @@ export function registerTools(server: McpServer): void {
       hashtype: z.string().optional().describe('Hash algorithm: "sha256" (default), "sha256D", "blake2b", "keccak256".'),
       signature: z.string().optional().describe('Existing base64 signature for multi-sig accumulation.'),
       encrypttoaddress: z.string().optional().describe('Sapling z-address to encrypt data to. Returns both encrypted and plaintext versions. The encrypted DataDescriptor can be stored on an identity via updateidentity or sent via sendcurrency.'),
+      vdxfdata: z.union([z.string(), z.record(z.unknown())]).optional().describe('VDXF-encoded structured data. String form hashes the raw string (equivalent to message). Object form performs VDXF binary serialization before hashing — use for canonical signing of VDXF-structured content such as contentmultimap entries.'),
       createmmr: z.boolean().optional().describe('If true (or if multiple items are provided), returns MMR data and root signature.'),
     },
-    async ({ chain, address, message, filename, messagehex, messagebase64, datahash, mmrdata, mmrsalt, mmrhashtype, prefixstring, vdxfkeys, vdxfkeynames, boundhashes, hashtype, signature, encrypttoaddress, createmmr }) => {
+    async ({ chain, address, message, filename, messagehex, messagebase64, datahash, mmrdata, mmrsalt, mmrhashtype, prefixstring, vdxfkeys, vdxfkeynames, boundhashes, hashtype, signature, encrypttoaddress, vdxfdata, createmmr }) => {
       try {
         const sigObj: Record<string, unknown> = { address };
         if (message !== undefined) sigObj.message = message;
@@ -174,6 +175,7 @@ export function registerTools(server: McpServer): void {
         if (hashtype !== undefined) sigObj.hashtype = hashtype;
         if (signature !== undefined) sigObj.signature = signature;
         if (encrypttoaddress !== undefined) sigObj.encrypttoaddress = encrypttoaddress;
+        if (vdxfdata !== undefined) sigObj.vdxfdata = vdxfdata;
         if (createmmr !== undefined) sigObj.createmmr = createmmr;
 
         const result = await rpcCall(chain, 'signdata', [sigObj]);

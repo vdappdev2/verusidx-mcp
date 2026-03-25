@@ -10,7 +10,7 @@ ensureSpendingLimitsFile();
 
 const server = new McpServer({
   name: 'verusidx-marketplace-mcp',
-  version: '0.1.4',
+  version: '0.1.5',
 });
 
 registerTools(server);

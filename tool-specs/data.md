@@ -266,6 +266,7 @@ Can also **encrypt** data to a z-address via `encrypttoaddress` — returns both
 | `messagehex` | string | No | Hex-encoded data to sign. |
 | `messagebase64` | string | No | Base64-encoded data to sign. May not work in all daemon versions — prefer `messagehex` if base64 fails. |
 | `datahash` | string | No | Pre-computed 256-bit hex hash to sign directly. |
+| `vdxfdata` | string or object | No | VDXF-encoded structured data. **String form** hashes the raw string (equivalent to `message`). **Object form** performs VDXF binary serialization before hashing — use for canonical signing of VDXF-structured content such as contentmultimap entries. |
 | `mmrdata` | array | No | Array of data objects for MMR signing. Each element: `{"filename" or "message" or "serializedhex" or "serializedbase64" or "vdxfdata" or "datahash": "value"}`. |
 | `mmrsalt` | array | No | Array of salt strings to protect privacy of MMR leaf nodes. |
 | `mmrhashtype` | string | No | Hash type for MMR: `"sha256"`, `"sha256D"`, `"blake2b"`, `"keccak256"`. Default: `"blake2b"`. |
@@ -278,7 +279,7 @@ Can also **encrypt** data to a z-address via `encrypttoaddress` — returns both
 | `encrypttoaddress` | string | No | Sapling z-address to encrypt data to. Returns both encrypted and plaintext versions. The encrypted DataDescriptor can be stored on an identity via `updateidentity` or sent via `sendcurrency`. |
 | `createmmr` | boolean | No | If true (or if multiple items are provided), returns MMR data and root signature. |
 
-Exactly one data input mode must be provided: `message`, `filename`, `messagehex`, `messagebase64`, `datahash`, or `mmrdata`.
+Exactly one data input mode must be provided: `message`, `filename`, `messagehex`, `messagebase64`, `datahash`, `vdxfdata`, or `mmrdata`.
 
 **Annotations:**
 ```json
@@ -311,6 +312,8 @@ Returns the daemon's response directly:
 | `boundhashes` | string[] | Bound hashes (echoed back) |
 
 **Note on `boundhashes`:** The `signaturedata.boundhashes` field contains byte-reversed hashes (internal daemon format). For `verifysignature`, always use the original boundhashes you passed to `signdata`, not the reversed values from `signaturedata`.
+
+**`vdxfdata` string vs object form:** String form produces the same hash as `message` with identical content. Object form (e.g., `{"iK7a5JNJnbeuYWVHCDRpJosj3irGJ5Qa8c": "hello"}`) performs VDXF binary serialization first, producing a different hash — use this when signing data in the same canonical format as on-chain identity contentmultimap entries.
 
 **When `encrypttoaddress` is used, additional fields:**
 

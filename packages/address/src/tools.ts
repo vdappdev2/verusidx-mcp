@@ -59,6 +59,23 @@ export function registerTools(server: McpServer): void {
   );
 
   server.tool(
+    'z_validateaddress',
+    'Validate a shielded (Sapling) z-address and return detailed information. Returns whether the address is valid, whether it belongs to this wallet (ismine), the address type, and key components (payingkey, transmissionkey, diversifier). Use this to verify z-addresses before sending funds or data, or to check if a z-address is controlled by the local wallet. Complements validateaddress, which only works for transparent (R/i) addresses.',
+    {
+      chain: z.string().describe('Chain to query (e.g., "VRSC", "vrsctest")'),
+      address: z.string().describe('The shielded z-address (zs1...) to validate'),
+    },
+    async ({ chain, address }) => {
+      try {
+        const result = await rpcCall(chain, 'z_validateaddress', [address]);
+        return ok(result);
+      } catch (err) {
+        return handleError(err);
+      }
+    },
+  );
+
+  server.tool(
     'getaddressesbyaccount',
     'List all transparent addresses for an account. In Verus, the default account is "" (empty string). Returns an array of R-addresses associated with the account. Use this to see all transparent addresses the wallet has generated.',
     {

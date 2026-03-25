@@ -55,7 +55,7 @@ You can set read-only mode independently per MCP server.
 | `decryptdata` | Decrypt on-chain data using a data descriptor, optional viewing key, and txid. Supports both z-address data and identity content. |
 | `z_exportviewingkey` | Export the extended viewing key (EVK) for a z-address. Grants read-only decryption access. |
 | `z_viewtransaction` | View detailed shielded transaction information including spends, outputs, and memos. |
-| `signdata` | Sign data with a VerusID or R-address. Supports message, file, hex, base64, hash, and MMR inputs. Can encrypt to a z-address. |
+| `signdata` | Sign data with a VerusID or R-address. Supports message, file, hex, base64, hash, vdxfdata, and MMR inputs. Can encrypt to a z-address. |
 | `verifysignature` | Verify a signature produced by `signdata`. Checks against identity keys at signing height or current keys. |
 
 ### Write tools (disabled in read-only mode)

@@ -1,6 +1,6 @@
 {
   "name": "@verusidx/shared",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Shared library for verusidx MCP servers — registry reader, RPC client, error handling, audit logging",
   "type": "module",
   "main": "./build/index.js",

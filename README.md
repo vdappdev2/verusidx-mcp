@@ -9,7 +9,7 @@
 [![npm](https://img.shields.io/npm/v/@verusidx/definecurrency-mcp?label=definecurrency-mcp)](https://www.npmjs.com/package/@verusidx/definecurrency-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-7 [MCP](https://modelcontextprotocol.io/) servers giving AI agents direct, local access to the [Verus](https://verus.io/) blockchain — **48 tools, zero cloud dependencies**. No API keys. No accounts. No intermediary between the agent and the chain.
+7 [MCP](https://modelcontextprotocol.io/) servers giving AI agents direct, local access to the [Verus](https://verus.io/) blockchain — **49 tools, zero cloud dependencies**. No API keys. No accounts. No intermediary between the agent and the chain.
 
 Works with [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Cursor](https://cursor.com/), and any MCP-compatible client.
 
@@ -51,7 +51,7 @@ No separate install step — `npx` fetches and runs the package on demand. Add m
 | [`@verusidx/identity-mcp`](packages/identity/) | 11 | Create, manage, and query VerusIDs |
 | [`@verusidx/send-mcp`](packages/send/) | 8 | Send, convert, and transfer currency; check balances and conversions |
 | [`@verusidx/data-mcp`](packages/data/) | 7 | Retrieve, decrypt, sign, and verify on-chain data; manage viewing keys |
-| [`@verusidx/address-mcp`](packages/address/) | 5 | Generate, validate, and list transparent and shielded addresses |
+| [`@verusidx/address-mcp`](packages/address/) | 6 | Generate, validate, and list transparent and shielded addresses |
 | [`@verusidx/marketplace-mcp`](packages/marketplace/) | 5 | On-chain offers and trades |
 | [`@verusidx/definecurrency-mcp`](packages/definecurrency/) | 1 | Define and launch new currencies |
 
@@ -105,7 +105,7 @@ AI Client (Claude Code, Cursor, etc.)
     |
     |  stdio (local process, no network)
     v
-verusidx MCP servers (7 servers, 48 tools)
+verusidx MCP servers (7 servers, 49 tools)
     |
     |  JSON-RPC over localhost
     v

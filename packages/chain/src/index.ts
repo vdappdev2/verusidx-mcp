@@ -6,7 +6,7 @@ import { registerTools } from './tools.js';
 
 const server = new McpServer({
   name: 'verusidx-chain-mcp',
-  version: '0.1.4',
+  version: '0.1.5',
 });
 
 registerTools(server);

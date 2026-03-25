@@ -32,9 +32,10 @@ Add to your MCP client config (e.g., Claude Code `claude_desktop_config.json`):
 
 ### Read-Only Mode
 
-Set `VERUSIDX_READ_ONLY=true` to disable write tools. In read-only mode, 3 tools remain available:
+Set `VERUSIDX_READ_ONLY=true` to disable write tools. In read-only mode, 4 tools remain available:
 
-- `validateaddress` — check if an address is valid and whether the wallet owns it
+- `validateaddress` — check if a transparent address is valid and whether the wallet owns it
+- `z_validateaddress` — validate shielded z-addresses and check wallet ownership
 - `getaddressesbyaccount` — list transparent addresses
 - `z_listaddresses` — list shielded addresses
 
@@ -49,6 +50,7 @@ You can set read-only mode independently per MCP server. For example, keep addre
 | Tool | Description |
 |---|---|
 | `validateaddress` | Validate an address and return info (isvalid, ismine, type) |
+| `z_validateaddress` | Validate a shielded z-address and return info (isvalid, ismine, type, key components) |
 | `getaddressesbyaccount` | List all transparent addresses for an account |
 | `z_listaddresses` | List all shielded addresses in the wallet |
 

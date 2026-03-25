@@ -183,6 +183,49 @@ Returns a single string — the new shielded Sapling address (e.g., `"zs1..."`).
 
 ---
 
+## 6. `z_validateaddress`
+
+**Description:**
+Validate a shielded (Sapling) z-address and return detailed information about it. Returns whether the address is valid, whether it belongs to this wallet (ismine), the address type, and key components. Complements `validateaddress`, which only works for transparent (R/i) addresses.
+
+**Input Schema:**
+
+| Param | Type | Required | Description |
+|---|---|---|---|
+| `chain` | string | Yes | Chain to query (e.g., `"VRSC"`, `"vrsctest"`) |
+| `address` | string | Yes | The shielded z-address (zs1...) to validate |
+
+**Annotations:**
+```json
+{
+  "readOnlyHint": true,
+  "destructiveHint": false,
+  "idempotentHint": true,
+  "openWorldHint": false
+}
+```
+
+**Output:**
+
+Returns the daemon's `z_validateaddress` response. Key fields:
+
+| Field | Type | Description |
+|---|---|---|
+| `isvalid` | boolean | Whether the address is a valid Sapling z-address |
+| `address` | string | The address validated |
+| `type` | string | Address type (e.g., `"sapling"`) |
+| `ismine` | boolean | Whether this z-address belongs to the wallet (spending key is present) |
+| `payingkey` | string | Hex-encoded paying key |
+| `transmissionkey` | string | Hex-encoded transmission key |
+| `diversifier` | string | Hex-encoded diversifier |
+| `diversifiedtransmissionkey` | string | Hex-encoded diversified transmission key |
+
+**Key fields for agents:**
+- `isvalid: false` — the address is malformed or not a valid Sapling address. Do not send funds or data to it.
+- `ismine: true` — the wallet holds the spending key for this z-address.
+
+---
+
 ## Environment Variables
 
 | Variable | Description |
