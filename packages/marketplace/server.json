@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.vdappdev2/marketplace",
+  "description": "MCP server for Verus on-chain marketplace — create, browse, accept, and close offers",
+  "repository": {
+    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "source": "github"
+  },
+  "version": "0.1.6",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@verusidx/marketplace-mcp",
+      "version": "0.1.6",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

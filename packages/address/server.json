@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.vdappdev2/address",
+  "description": "MCP server for Verus address management — generate, validate, and list transparent and shielded addresses",
+  "repository": {
+    "url": "https://github.com/vdappdev2/verusidx-mcp",
+    "source": "github"
+  },
+  "version": "0.1.6",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@verusidx/address-mcp",
+      "version": "0.1.6",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 {
   "name": "@verusidx/identity-mcp",
-  "version": "0.1.5",
+  "version": "0.1.6",
+  "mcpName": "io.github.vdappdev2/identity",
   "description": "MCP server for VerusID identity management — create, update, revoke, recover, sign, and query Verus identities",
   "license": "MIT",
   "repository": {

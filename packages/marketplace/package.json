@@ -1,6 +1,7 @@
 {
   "name": "@verusidx/marketplace-mcp",
-  "version": "0.1.5",
+  "version": "0.1.6",
+  "mcpName": "io.github.vdappdev2/marketplace",
   "description": "MCP server for Verus on-chain marketplace — create, browse, accept, and close offers",
   "license": "MIT",
   "repository": {

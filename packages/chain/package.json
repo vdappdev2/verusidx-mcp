@@ -1,6 +1,7 @@
 {
   "name": "@verusidx/chain-mcp",
-  "version": "0.1.5",
+  "version": "0.1.6",
+  "mcpName": "io.github.vdappdev2/chain",
   "license": "MIT",
   "repository": {
     "type": "git",

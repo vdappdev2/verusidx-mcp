@@ -1,6 +1,7 @@
 {
   "name": "@verusidx/data-mcp",
-  "version": "0.1.5",
+  "version": "0.1.6",
+  "mcpName": "io.github.vdappdev2/data",
   "description": "MCP server for Verus on-chain data retrieval, decryption, signing, and verification",
   "license": "MIT",
   "repository": {
