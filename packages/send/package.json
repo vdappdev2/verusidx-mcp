@@ -1,8 +1,8 @@
 {
   "name": "@verusidx/send-mcp",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "mcpName": "io.github.vdappdev2/send",
-  "description": "MCP server for Verus currency operations — send, convert, cross-chain transfer, check balances and conversion paths",
+  "description": "MCP server for Verus currency — send, convert, cross-chain transfer, balance/path/tx queries",
   "license": "MIT",
   "repository": {
     "type": "git",

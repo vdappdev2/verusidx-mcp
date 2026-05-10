@@ -1,8 +1,8 @@
 {
   "name": "@verusidx/identity-mcp",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "mcpName": "io.github.vdappdev2/identity",
-  "description": "MCP server for VerusID identity management — create, update, revoke, recover, sign, and query Verus identities",
+  "description": "MCP server for VerusID identities — register, update, revoke, recover, query, set timelock",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,8 +19,7 @@
     "ai-agents",
     "identity",
     "verusid",
-    "digital-identity",
-    "signing"
+    "digital-identity"
   ],
   "type": "module",
   "bin": {

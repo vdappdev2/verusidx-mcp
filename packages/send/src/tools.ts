@@ -273,7 +273,7 @@ export function registerTools(server: McpServer): void {
           addconversionfees: z.boolean().optional().describe('If true, calculate additional fees so the full amount is converted after fees.'),
           refundto: z.string().optional().describe('Address for refunds on pre-conversions. Defaults to fromaddress.'),
           memo: z.string().optional().describe('String message for z-address destinations.'),
-          data: z.record(z.unknown()).optional().describe('Data-only output. See signdata in identity-mcp for the data object format.'),
+          data: z.record(z.unknown()).optional().describe('Data-only output. See signdata in data-mcp for the data object format.'),
           preconvert: z.boolean().optional().describe('Convert at market price before currency launch.'),
           burn: z.boolean().optional().describe('Destroy the currency and subtract from supply.'),
           mintnew: z.boolean().optional().describe('Create new currency. Must send from the currency\'s ID and the currency must be centralized.'),

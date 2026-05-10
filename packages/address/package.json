@@ -1,8 +1,8 @@
 {
   "name": "@verusidx/address-mcp",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "mcpName": "io.github.vdappdev2/address",
-  "description": "MCP server for Verus address management — generate, validate, and list transparent and shielded addresses",
+  "description": "MCP server for Verus addresses — generate, validate, list transparent and shielded addresses",
   "license": "MIT",
   "repository": {
     "type": "git",
