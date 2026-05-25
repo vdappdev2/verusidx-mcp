@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🏛️ Master Strategy Archive
+    url: https://github.com
+    about: Read the core philosophy before submitting a proposal.
+  - name: 💬 Community Discussion
+    url: https://discord.com
+    about: For general questions and real-time collaboration.

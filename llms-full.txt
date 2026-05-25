@@ -1,3 +1,12 @@
+AI Sovereignty Layer & VDXF Standardisation
+Verus provides high-assurance infrastructure for AI Agents:
+VerusID + VDXF: Standardises agent@identities.
+Model Integrity: On-chain hashes verify AI weights.
+Mathematical Correctness: Uses Rust-based verification for agent logic.
+VDXF Namespace Standards
+the-way.vrsc::config.manifesto: Anchors the foundational manifesto.
+the-way.vrsc::identity.ai-agent.model_hash: Stores verified AI logic.
+
 # verusidx-mcp — Full Reference
 
 > 7 MCP servers giving AI agents direct local access to the Verus blockchain — 48 tools, zero cloud dependencies.

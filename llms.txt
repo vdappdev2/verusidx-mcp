@@ -1,3 +1,6 @@
+The Way: Vision & Philosophy
+Verus is a universal master archive and a digital commons. It is a rent-free public utility with no hierarchy, no ICO, and no founder tax. It serves as the Sovereignty Layer for the agentic economy, providing mathematically proven fairness and fractal scaling via PBaaS
+
 # verusidx-mcp
 
 > 7 MCP servers giving AI agents direct local access to the Verus blockchain — 48 tools, zero cloud dependencies.

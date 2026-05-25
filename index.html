@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verus Market Cap Explorer & AI Node Gateway</title>
+    <style>
+        body { background: #040812; color: #F1F5F9; font-family: sans-serif; padding:40px; margin:0; }
+        .layout { display: grid; grid-template-columns: 260px 1fr; gap: 30px; }
+        .sidebar { background: #0C1428; border: 1px solid #1A2B4C; border-radius: 14px; padding: 25px; height: 85vh; box-sizing: border-box; }
+        .nav-item { padding: 12px; color: #4B6187; border-radius: 6px; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+        .nav-item:hover { color: #00FFFF; background: rgba(0,255,255,0.02); }
+        .active-nav { color: #00FFFF; background: rgba(0,255,255,0.04); border-left: 4px solid #00FFFF; text-shadow: 0 0 10px rgba(0,255,255,0.4); }
+        .macro-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .macro-card { background: #0C1428; border: 1px solid #1A2B4C; border-radius: 10px; padding: 15px; box-shadow: 0 8px 24px rgba(4,8,18,0.5); }
+        .macro-val { font-size: 1.3rem; color: #00FFFF; font-family: monospace; font-weight: 600; margin-top: 5px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .card { background: #0C1428; border: 1px solid #1A2B4C; border-radius: 14px; padding: 25px; box-shadow: 0 16px 36px rgba(4, 8, 18, 0.8); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .card:hover { border-color: rgba(0,255,255,0.4); box-shadow: 0 20px 48px rgba(0, 255, 255, 0.08); }
+        .ticker { color: #00FFFF; font-size: 1.4rem; font-weight: 600; margin: 0 0 10px 0; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
+        .rank-badge { font-size: 0.8rem; background: #3165A5; color: #FFF; padding: 2px 8px; border-radius: 20px; font-weight: 700; flex-shrink: 0; }
+        .metric { font-size: 0.9rem; color: #4B6187; margin: 6px 0; }
+        .metric span { color: #F1F5F9; font-family: monospace; font-weight: 600; }
+        .delta-up { color: #00FF66 !important; font-weight: bold; }
+        .delta-down { color: #FF3366 !important; font-weight: bold; }
+        .btn { width: 100%; background: linear-gradient(135deg, #3165A5, #153259); color: #FFF; border: none; border-radius: 8px; padding: 12px; font-weight: 600; box-shadow: 0 4px 14px rgba(49,101,165,0.3); cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+        .btn:hover { box-shadow: 0 0 24px #00FFFF; }
+        .search-box { width: 100%; padding: 12px; background: #040812; border: 1px solid #1A2B4C; border-radius: 8px; color: #F1F5F9; margin-top: 20px; box-sizing: border-box; }
+        .search-box:focus { border-color: #00FFFF; outline: none; }
+        .ai-endpoint-tag { font-size: 0.7rem; color: #00FFFF; background: rgba(0,255,255,0.1); border: 1px solid #00FFFF; border-radius: 4px; padding: 2px 6px; font-family: monospace; display: inline-block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="sidebar">
+            <h2 style="color:#3165A5; margin-left:12px; letter-spacing:1.5px; margin-top:0; font-weight:700;">VERUS VCMC</h2>
+            <div id="navTop" class="nav-item active-nav" onclick="setFilterMode(true)">?? Top Liquidity</div>
+            <div id="navAll" class="nav-item" onclick="setFilterMode(false)">?? All 263 Assets</div>
+            <input type="text" id="vcmcSearch" class="search-box" placeholder="?? Search Ticker / ID...">
+            <div style="margin-top: 20px; border-top: 1px solid #1A2B4C; padding-top: 15px;">
+                <div style="font-size:0.75rem; color:#4B6187; font-weight:600; text-transform:uppercase; margin-bottom:5px;">Machine Interfaces</div>
+                <a href="/api/currencies" target="_blank" style="text-decoration:none;"><div class="ai-endpoint-tag">GET /api/currencies</div></a>
+                <a href="/api/deltas" target="_blank" style="text-decoration:none;"><div class="ai-endpoint-tag">GET /api/deltas</div></a>
+            </div>
+            <button class="btn" style="margin-top:20px;" onclick="updateVcmcDashboard()">?? Force Sync</button>
+        </div>
+        <div>
+            <div class="macro-bar">
+                <div class="macro-card"><div style="font-size:0.75rem; color:#4B6187; font-weight:600; text-transform:uppercase;">Network Block Height</div><div class="macro-val" id="macroHeight">---</div></div>
+                <div class="macro-card"><div style="font-size:0.75rem; color:#4B6187; font-weight:600; text-transform:uppercase;">Ecosystem Hashrate</div><div class="macro-val" id="macroHash">---</div></div>
+                <div class="macro-card"><div style="font-size:0.75rem; color:#4B6187; font-weight:600; text-transform:uppercase;">Staking Status</div><div class="macro-val" id="macroStaking">---</div></div>
+                <div class="macro-card"><div style="font-size:0.75rem; color:#4B6187; font-weight:600; text-transform:uppercase;">Mempool Backlog</div><div class="macro-val" id="macroMempool">---</div></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h1 style="margin:0; font-weight:400; letter-spacing:0.5px;" id="dashboardTitle">Ecosystem Liquidity Leaderboard</h1>
+            </div>
+            <div class="grid" id="vcmcGrid"></div>
+        </div>
+    </div>
+    <script>
+        let cachedAssets = [];
+        let showOnlyTopLiquidity = true;
+
+        function setFilterMode(mode) {
+            showOnlyTopLiquidity = mode;
+            document.getElementById("navTop").className = showOnlyTopLiquidity ? "nav-item active-nav" : "nav-item";
+            document.getElementById("navAll").className = !showOnlyTopLiquidity ? "nav-item active-nav" : "nav-item";
+            document.getElementById("dashboardTitle").innerText = showOnlyTopLiquidity ? "Ecosystem Liquidity Leaderboard" : "Complete Asset Index Inventory";
+            renderGrid();
+        }
+
+        async function updateVcmcDashboard() {
+            try {
+                const res = await fetch("/api/currencies");
+                const data = await res.json();
+                cachedAssets = data.currencies || [];
+
+                document.getElementById("macroHeight").innerText = data.macro.height ? parseInt(data.macro.height).toLocaleString() : "---";
+                document.getElementById("macroHash").innerText = data.macro.hash ? (parseFloat(data.macro.hash) / 1000000).toFixed(2) + " MH/s" : "---";
+                document.getElementById("macroStaking").innerText = data.macro.staking ? "? ACTIVE" : "?? IDLE";
+                document.getElementById("macroStaking").style.color = data.macro.staking ? "#00FFFF" : "#4B6187";
+                document.getElementById("macroMempool").innerText = data.macro.mempool !== undefined ? data.macro.mempool + " TXs" : "---";
+
+                renderGrid();
+            } catch (e) { console.error("Sync Exception:", e); }
+        }
+
+        function renderGrid() {
+            const query = document.getElementById("vcmcSearch").value.toUpperCase();
+            const grid = document.getElementById("vcmcGrid");
+            grid.innerHTML = "";
+            let rank = 1;
+            
+            cachedAssets.forEach(asset => {
+                const tickerStr = String(asset.ticker || "").toUpperCase();
+                const currencyIdStr = String(asset.currencyId || "").toUpperCase();
+                
+                const passesSearch = tickerStr.includes(query) || currencyIdStr.includes(query);
+                const passesFilter = !showOnlyTopLiquidity || parseFloat(asset.computedLiquidityDepth || 0) > 0.01;
+
+                if (passesSearch && passesFilter) {
+                    const card = document.createElement("div");
+                    card.className = "card";
+                    let reserveHtml = "";
+                    
+                    const reserveArray = asset.reserves || [];
+                    reserveArray.forEach(r => {
+                        reserveHtml += `<div style="font-size:0.8rem; color:#4B6187; margin-top:4px;">? Balance: <span style="color:#F1F5F9">${parseFloat(r.balance || 0).toLocaleString()}</span> | W: <span style="color:#00FFFF">${r.weight || "0%"}</span> | Price: <span style="color:#3165A5">${r.price || "0.0000"}</span></div>`;
+                    });
+                    
+                    const depthVal = parseFloat(asset.computedLiquidityDepth || 0);
+                    const hasReserves = reserveArray.length > 0;
+                    
+                    // Format delta indicator color classes dynamically
+                    let deltaClass = "";
+                    let deltaSign = "";
+                    if (asset.delta24h > 0) { deltaClass = "delta-up"; deltaSign = "+"; }
+                    else if (asset.delta24h < 0) { deltaClass = "delta-down"; }
+                    const deltaText = asset.delta24h !== 0 ? ` <span class="${deltaClass}" style="font-size:0.85rem;margin-left:5px;">(${deltaSign}${asset.delta24h}%)</span>` : "";
+                    
+                    card.innerHTML = `<div><h3 class="ticker"><span title="${asset.ticker}">${asset.ticker}</span><span class="rank-badge">RANK #${rank}</span></h3><div class="metric">ID: <span>${currencyIdStr.substring(0,12)}...</span></div><div class="metric">Supply: <span>${parseFloat(asset.supply || 0).toLocaleString()}</span></div>${hasReserves ? '<div class="metric" style="font-weight:600; color:#3165A5; margin-top:14px; font-size:0.85rem; letter-spacing:0.5px;">CONSTITUENT RESERVE ASSETS:</div>' + reserveHtml : '<div class="metric" style="color:#4B6187; margin-top:14px; font-style:italic;">Standalone Sub-Chain / Token Entity</div>'}<div class="metric" style="margin-top:10px; font-size:0.75rem; color:#4B6187; word-break:break-all;">Proof TxID: <span style="color:#4B6187; font-family:monospace;">${asset.proofTxid.substring(0,20)}...</span></div></div><div class="metric" style="margin-top:15px; padding-top:10px; border-top:1px solid #1A2B4C; font-size:0.85rem;">Total Liquidity Depth: <span style="color:#00FFFF">${depthVal.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</span>${deltaText}</div>`;
+                    grid.appendChild(card);
+                    rank++;
+                }
+            });
+            
+            if(grid.innerHTML === "") {
+                grid.innerHTML = '<div class="card"><h3 class="ticker">No Assets Found</h3><p class="metric">Try refining your filter or search query string rules.</p></div>';
+            }
+        }
+        document.getElementById("vcmcSearch").addEventListener("input", renderGrid);
+        setInterval(updateVcmcDashboard, 5000);
+        updateVcmcDashboard();
+    </script>
+</body>
+</html>

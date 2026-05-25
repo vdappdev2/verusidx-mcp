@@ -1,0 +1,46 @@
+name: 🛡️ Sovereign Proposal
+description: Propose a high-level strategic shift or ethical framework for the Sovereignty Layer.
+title: "[STRATEGY]: "
+labels: ["visionary", "sovereignty-layer", "strategy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome, Steward of the Future.
+        The Sovereignty Layer is the ethical and philosophical bedrock of Verus. Use this form to propose a new direction or fundamental principle.
+  - type: input
+    id: vision-title
+    attributes:
+      label: Vision Title
+      placeholder: e.g., "The Decoupling of Identity from State-Centralized Ledgers"
+    validations:
+      required: true
+  - type: textarea
+    id: core-philosophy
+    attributes:
+      label: Core Philosophy
+      description: What is the fundamental human right or sovereign principle being addressed?
+      placeholder: Describe the 'Why' before the 'How'.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Strategic Impact
+      description: How does this change the 'Way' for future generations?
+  - type: checkboxes
+    id: alignment
+    attributes:
+      label: Pillars of Alignment
+      options:
+        - label: Individual Autonomy
+        - label: Permissionless Innovation
+        - label: Cryptographic Verifiability
+        - label: Anti-Fragile Governance
+  - type: checkboxes
+    id: oath
+    attributes:
+      label: The Steward's Oath
+      options:
+        - label: I have reviewed the # 🏛️ VERUS: THE WAY - MASTER STRATEGY ARCHIVE.
+          required: true
